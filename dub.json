@@ -1,0 +1,20 @@
+{
+	"name": "bfd",
+	"description": "A Brainfuck interpreter written in the D programming language",
+	"homepage": "https://github.com/nomad-software/bfd",
+	"authors": ["Gary Willoughby"],
+	"copyright": "Copyright (c) 2014 Gary Willoughby",
+	"license": "MIT",
+	"dependencies": {
+		"etcetera": ">=1.0.0"
+	},
+	"configurations": [
+		{
+			"name": "application",
+			"targetType": "executable",
+			"mainSourceFile": "source/bfd/main.d",
+			"targetName": "bfd",
+			"targetPath": "build",
+		},
+	],
+}
