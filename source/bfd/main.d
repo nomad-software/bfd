@@ -1,8 +1,10 @@
 /**
  * Imports.
  */
-import std.stdio;
 import etcetera.collection;
+import std.array;
+import std.conv;
+import std.stdio;
 
 /**
  * Main entry point.
@@ -12,19 +14,27 @@ import etcetera.collection;
  */
 void main(string[] args)
 {
-	// The stack within which to hold program state.
-	ubyte[32_000] stack;
+	// Read the program from stdin or the first argument if it's used.
+	auto source = args.length > 1 ? File(args[1], "r") : stdin;
+	string program = source
+		.byLine(KeepTerminator.no)
+		.join()
+		.to!(string);
 
-	// The pointer to the stack.
+	// The stack within which to hold program state.
+	// A standard Brainfuck interpreter uses a 30k stack.
+	ubyte[30_000] stack;
+
+	// The pointer to traverse the program stack.
 	char* pointer = cast(char*)stack.ptr;
 
-	// A stack to record the loops.
+	// A standard stack type to record loop start positions.
 	auto loops = new Stack!(size_t);
+
+	// A counter to handle skipping loops.
 	size_t skip;
 
-	// The program to run.
-	auto program = ">++++++++[<+++++++++>-]<.>>+>+>++>[-]+<[>[->+<<++++>]<<]>.+++++++..+++.>>+++++++.<<<[[-]<[-]>]<+++++++++++++++.>>.+++.------.--------.>>+.>++++.";
-
+	// Interpret the program.
 	for (size_t x = 0; x < program.length; x++)
 	{
 		switch(program[x])
