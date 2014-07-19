@@ -1,7 +1,7 @@
 /**
  * Imports.
  */
-import etcetera.collection;
+import etcetera.collection.stack;
 import std.array;
 import std.conv;
 import std.stdio;
