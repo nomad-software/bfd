@@ -1,6 +1,7 @@
 /**
  * Imports.
  */
+import core.stdc.stdio : getchar;
 import etcetera.collection.stack;
 import std.array;
 import std.conv;
@@ -60,6 +61,7 @@ void main(string[] args)
 				break;
 		
 			case ',':
+				*pointer = cast(char)getchar();
 				break;
 		
 			case '[':
