@@ -1,6 +1,7 @@
 /**
  * Imports.
  */
+import core.memory;
 import core.stdc.stdio : getchar;
 import etcetera.collection.stack;
 import std.array;
@@ -15,6 +16,9 @@ import std.stdio;
  */
 void main(string[] args)
 {
+	// Disable garbage collections.
+	GC.disable();
+
 	// Read the program from stdin or the first argument if it's used.
 	auto source = args.length > 1 ? File(args[1], "r") : stdin;
 	string program = source
