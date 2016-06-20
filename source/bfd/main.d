@@ -28,13 +28,13 @@ void main(string[] args)
 
 	// The stack within which to hold program state.
 	// A standard Brainfuck interpreter uses a 30k stack.
-	ubyte[30_000] stack;
+	ubyte[30_720] stack;
 
 	// The pointer to traverse the program stack.
 	char* pointer = cast(char*)stack.ptr;
 
 	// A standard stack type to record loop start positions.
-	auto loops = new Stack!(size_t);
+	auto loops = Stack!(size_t)(64);
 
 	// A counter to handle skipping loops.
 	size_t skip;
