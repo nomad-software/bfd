@@ -3,7 +3,6 @@
  */
 import core.memory;
 import core.stdc.stdio : getchar;
-import etcetera.collection.stack;
 import std.array;
 import std.conv;
 import std.stdio;
@@ -28,19 +27,19 @@ void main(string[] args)
 
 	// The stack within which to hold program state.
 	// A standard Brainfuck interpreter uses a 30k stack.
-	ubyte[30_720] stack;
+	char[30_720] stack = 0;
 
 	// The pointer to traverse the program stack.
-	char* pointer = cast(char*)stack.ptr;
+	char* pointer = stack.ptr;
 
 	// A standard stack type to record loop start positions.
-	auto loops = Stack!(size_t)(64);
+	int[1_024] loops; int loop = -1;
 
 	// A counter to handle skipping loops.
-	size_t skip;
+	int skip;
 
 	// Interpret the program.
-	for (size_t x = 0; x < program.length; x++)
+	for (int x = 0; x < program.length; x++)
 	{
 		switch(program[x])
 		{
@@ -65,7 +64,7 @@ void main(string[] args)
 				break;
 		
 			case ',':
-				*pointer = cast(char)getchar();
+				*pointer = cast(char) getchar();
 				break;
 		
 			case '[':
@@ -88,18 +87,18 @@ void main(string[] args)
 				}
 				else
 				{
-					loops.push(x);
+					loops[++loop] = x;
 				}
 				break;
 		
 			case ']':
 				if (*pointer == '\0')
 				{
-					loops.pop();
+					loop--;
 				}
 				else
 				{
-					x = loops.peek();
+					x = loops[loop];
 				}
 				break;
 		
