@@ -32,8 +32,8 @@ void main(string[] args)
 	// The pointer to traverse the program stack.
 	char* pointer = stack.ptr;
 
-	// A standard stack type to record loop start positions.
-	int[1_024] loops; int loop = -1;
+	// Record loop start positions to jump back when required.
+	int[2_056] loops; int loop = -1;
 
 	// A counter to handle skipping loops.
 	int skip;
