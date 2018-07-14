@@ -2,7 +2,7 @@
  * Imports.
  */
 import core.memory;
-import core.stdc.stdio : getchar;
+import core.stdc.stdio : printf, getchar;
 import std.array;
 import std.conv;
 import std.stdio;
@@ -60,7 +60,7 @@ void main(string[] args)
 				break;
 		
 			case '.':
-				writef("%c", *pointer);
+				printf("%c", *pointer);
 				break;
 		
 			case ',':
