@@ -6,7 +6,6 @@
 	"copyright": "Copyright (c) 2014 Gary Willoughby",
 	"license": "MIT",
 	"dependencies": {
-		"etcetera": ">=1.0.0"
 	},
 	"configurations": [
 		{
