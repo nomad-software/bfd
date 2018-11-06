@@ -24,7 +24,7 @@ void main(string[] args)
 		.to!(string);
 
 	char[30_720] stack = 0;
-	char* cell = stack.ptr;
+	int cell;
 
 	int[2_056] loops;
 	int loop = -1;
@@ -45,23 +45,23 @@ void main(string[] args)
 				break;
 		
 			case '+':
-				(*cell) += ops[x].count;
+				stack[cell] += ops[x].count;
 				break;
 		
 			case '-':
-				(*cell) -= ops[x].count;
+				stack[cell] -= ops[x].count;
 				break;
 		
 			case '.':
-				printf("%c", *cell);
+				printf("%c", stack[cell]);
 				break;
 		
 			case ',':
-				*cell = cast(char) getchar();
+				stack[cell] = cast(char) getchar();
 				break;
 		
 			case '[':
-				if (*cell == '\0')
+				if (stack[cell] == '\0')
 				{
 					skip++;
 					while (skip > 0)
@@ -85,7 +85,7 @@ void main(string[] args)
 				break;
 		
 			case ']':
-				if (*cell == '\0')
+				if (stack[cell] == '\0')
 				{
 					loop--;
 				}
