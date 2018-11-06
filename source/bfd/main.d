@@ -15,70 +15,63 @@ import std.stdio;
  */
 void main(string[] args)
 {
-	// Disable garbage collections.
 	GC.disable();
 
-	// Read the program from stdin or the first argument if it's used.
 	auto source = args.length > 1 ? File(args[1], "r") : stdin;
 	string program = source
 		.byLine(KeepTerminator.no)
 		.join()
 		.to!(string);
 
-	// The stack within which to hold program state.
-	// A standard Brainfuck interpreter uses a 30k stack.
 	char[30_720] stack = 0;
+	char* cell = stack.ptr;
 
-	// The pointer to traverse the program stack.
-	char* pointer = stack.ptr;
-
-	// Record loop start positions to jump back when required.
-	int[2_056] loops; int loop = -1;
-
-	// A counter to handle skipping loops.
+	int[2_056] loops;
+	int loop = -1;
 	int skip;
 
-	// Interpret the program.
-	for (int x = 0; x < program.length; x++)
+	auto ops = parseOperators(program);
+
+	for (int x = 0; x < ops.length; x++)
 	{
-		switch(program[x])
+		switch(ops[x].token)
 		{
 			case '>':
-				pointer++;
+				cell += ops[x].count;
 				break;
 		
 			case '<':
-				pointer--;
+				cell -= ops[x].count;
 				break;
 		
 			case '+':
-				(*pointer)++;
+				(*cell) += ops[x].count;
 				break;
 		
 			case '-':
-				(*pointer)--;
+				(*cell) -= ops[x].count;
 				break;
 		
 			case '.':
-				printf("%c", *pointer);
+				printf("%c", *cell);
 				break;
 		
 			case ',':
-				*pointer = cast(char) getchar();
+				*cell = cast(char) getchar();
 				break;
 		
 			case '[':
-				if (*pointer == '\0')
+				if (*cell == '\0')
 				{
 					skip++;
 					while (skip > 0)
 					{
 						x++;
-						if (program[x] == '[')
+						if (ops[x].token == '[')
 						{
 							skip++;
 						}
-						else if (program[x] == ']')
+						else if (ops[x].token == ']')
 						{
 							skip--;
 						}
@@ -92,7 +85,7 @@ void main(string[] args)
 				break;
 		
 			case ']':
-				if (*pointer == '\0')
+				if (*cell == '\0')
 				{
 					loop--;
 				}
@@ -101,9 +94,68 @@ void main(string[] args)
 					x = loops[loop];
 				}
 				break;
-		
+
 			default:
 				break;
 		}
 	}
+}
+
+/**
+ * Read the operators from the program and count the number of times they are
+ * used consecutively.
+ *
+ * Params:
+ *     program = The program to parse.
+ */
+auto parseOperators(string program)
+{
+	static struct Operator
+	{
+		char token;
+		int count;
+	}
+
+	Operator[] ops;
+	Operator current;
+
+	for (int x = 0; x < program.length; x++)
+	{
+		auto op = program[x];
+
+		switch(op)
+		{
+			case '>': goto case;
+			case '<': goto case;
+			case '+': goto case;
+			case '-':
+					  if (op == current.token)
+					  {
+						  current.count++;
+						  break;
+					  }
+
+					  if (current.token != char.init)
+					  {
+						  ops ~= current;
+					  }
+
+					  current = Operator(op, 1);
+					  break;
+
+			case '.': goto case;
+			case ',': goto case;
+			case '[': goto case;
+			case ']':
+					  ops ~= current;
+					  current = Operator(op, 1);
+					  break;
+
+			default:
+					  break;
+		}
+	}
+
+	ops ~= current;
+	return ops;
 }
