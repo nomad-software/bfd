@@ -46,9 +46,9 @@ auto parseOperators(string program)
 
 		switch(op)
 		{
-			case bf.right: goto case;
-			case bf.left: goto case;
-			case bf.add: goto case;
+			case bf.right:
+			case bf.left:
+			case bf.add:
 			case bf.sub:
 				if (op == current.token)
 				{
@@ -64,9 +64,9 @@ auto parseOperators(string program)
 				current = Operator(op, 1);
 				break;
 
-			case bf.input: goto case;
-			case bf.output: goto case;
-			case bf.open: goto case;
+			case bf.input:
+			case bf.output:
+			case bf.open:
 			case bf.close:
 				ops ~= current;
 				current = Operator(op, 1);
